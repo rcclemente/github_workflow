@@ -24,6 +24,7 @@ jobs:
           CURRENT_RELEASE_VERSION=$(git describe --tags --abbrev=0 | awk 'BEGIN { FS = "v" } {print $2}')
           versions=(${CURRENT_RELEASE_VERSION//./ })
           major=${versions[0]:-0}
+          major_i=$((major+1))
           RELEASE_VERSION="v${major_i}"
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
