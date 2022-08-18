@@ -28,6 +28,7 @@ jobs:
           default_prerelease_bump: 'none'
           tag_prefix: 'v'
           dry_run: true
+          fetch_all_tags: true
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:   
