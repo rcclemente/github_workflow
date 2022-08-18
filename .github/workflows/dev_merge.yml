@@ -10,12 +10,9 @@ on:
       - closed
 
 jobs:
-  # This workflow contains a single job called "build"
   tag_new_merged_pr:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    if: github.event.pull_request.merged == true # only merged pull requests must trigger this job
     steps:
       - uses: actions/checkout@v2
         with:
@@ -30,6 +27,7 @@ jobs:
           default_bump: 'major'
           default_prerelease_bump: 'none'
           tag_prefix: 'v'
+          dry_run: true
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:   
