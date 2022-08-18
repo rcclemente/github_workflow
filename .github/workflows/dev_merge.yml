@@ -19,20 +19,21 @@ jobs:
           ref: dev
           persist-credentials: false # use personal tocket instead of GITHUB_TOKEN.
           fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
+      - name: Create Major Version
+        run: |
+          CURRENT_RELEASE_VERSION=$(git describe --tags --abbrev=0 | awk 'BEGIN { FS = "v" } {print $2}')
+          versions=(${CURRENT_RELEASE_VERSION//./ })
+          major=${versions[0]:-0}
+          RELEASE_VERSION="v${major_i}"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: thomaseizinger/create-release@1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          default_bump: 'major'
-          default_prerelease_bump: 'none'
-          tag_prefix: 'v'
-          dry_run: true
-          fetch_all_tags: true
-          
-      - name: Create a GitHub release
-        uses: ncipollo/release-action@v1
-        with:   
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+          target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: ${{ env.RELEASE_VERSION }}
+          draft: false
+          prerelease: false
