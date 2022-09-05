@@ -16,6 +16,7 @@ jobs:
         run: |
           git config user.name 'Github bot'
           git config user.email 'github.bot@users.noreply.github.com'
+          git switch -c uat-${{ env.GITHUB_TAG }}
           git commit --allow-empty -m "[UAT] Release ${{ env.GITHUB_TAG }}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
