@@ -15,7 +15,7 @@ jobs:
       - name: pull-request
         uses: repo-sync/pull-request@v2
         with:
-          # source_branch: ""
+          source_branch: ${{ github.head_ref }}
           destination_branch: "uat"                      # If blank, default: master
           pr_title: "[UAT] Release ${{ env.GITHUB_TAG }}"
           pr_body: |
