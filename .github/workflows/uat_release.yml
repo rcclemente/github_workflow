@@ -12,19 +12,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set Tag
         run: echo "GITHUB_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
-      - name: Create Pull Request
-        uses: devops-infra/action-pull-request@v0.5.0
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # source_branch: development
-          target_branch: uat
-          title: "[UAT] Release ${{ env.GITHUB_TAG }}"
-          # template: .github/PULL_REQUEST_TEMPLATE.md
-          body: |
+          # source_branch: ""
+          destination_branch: "uat"                      # If blank, default: master
+          pr_title: "[UAT] Release ${{ env.GITHUB_TAG }}"
+          pr_body: |
             ## Describe your changes
 
             ## Checklist before requesting a review
             - [ ] Verified that this worked with DEV environment
-          label: "UAT"
-          get_diff: true
+          pr_label: "UAT"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
