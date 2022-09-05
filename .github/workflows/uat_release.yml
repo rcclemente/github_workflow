@@ -16,7 +16,7 @@ jobs:
         with:
           delete-branch: true
           branch: "uat-${{ env.GITHUB_TAG }}"
-          #base: "dev"
+          base: "dev"
           team-reviewers: |
             @mysale/cloud-engineering-team
           labels: |
@@ -27,3 +27,4 @@ jobs:
 
             ## Checklist before requesting a review
             - [ ] Verified that this worked with DEV environment
+
