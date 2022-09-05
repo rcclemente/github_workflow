@@ -7,16 +7,21 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     name: Create Pull Request to UAT
-
     steps:
       - uses: actions/checkout@v3
       - name: Set Tag
-        run: echo "GITHUB_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
+        run: |
+          echo "GITHUB_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
+      - name: Set Title
+        run: |
+          echo "GITHUB_TITLE='[UAT] Release ${{ env.GITHUB_TAG }}'" >> $GITHUB_ENV
       - name: Append commit
         run: |
           git config user.name 'Github bot'
           git config user.email 'github.bot@users.noreply.github.com'
-          git commit --allow-empty -m "[UAT] Release ${{ env.GITHUB_TAG }}"
+          echo "${{ env.GITHUB_TITLE }} `date +%s`"> releaseinfo.txt
+          git add -A
+          git commit -m "${{ env.GITHUB_TITLE }}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
@@ -27,7 +32,7 @@ jobs:
             @mysale/cloud-engineering-team
           labels: |
             UAT
-          title: "[UAT] Release ${{ env.GITHUB_TAG }}"
+          title: "${{ env.GITHUB_TITLE }}"
           body: |
             ## Describe your changes
 
