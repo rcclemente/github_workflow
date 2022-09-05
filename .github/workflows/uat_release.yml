@@ -27,24 +27,4 @@ jobs:
             - [ ] Verified that this worked with DEV environment
           label: "UAT"
           get_diff: true
-          # reviewer: octocat
-          # assignee: octocat
-          # ignore_users: "dependabot"
-          # allow_no_diff: false
-          # - name: Create Pull Request
-          #   uses: peter-evans/create-pull-request@v4
-          #   with:
-          #     delete-branch: true
-          #     branch: "uat-${{ env.GITHUB_TAG }}"
-          #     base: "uat"
-          #     team-reviewers: |
-          #       @mysale/cloud-engineering-team
-          #     labels: |
-          #       UAT
-          #     title: "[UAT] Release ${{ env.GITHUB_TAG }}"
-          #     body: |
-          #       ## Describe your changes
-
-          #       ## Checklist before requesting a review
-          #       - [ ] Verified that this worked with DEV environment
 
