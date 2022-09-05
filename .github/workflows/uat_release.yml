@@ -15,13 +15,13 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
-          branch: "uat-${{ GITHUB_TAG }}"
+          branch: "uat-${{ env.GITHUB_TAG }}"
           base: "uat"
           team-reviewers: |
             @mysale/cloud-engineering-team
           label: |
             UAT
-          title: "[UAT] Release ${{ GITHUB_TAG }}"
+          title: "[UAT] Release ${{ env.GITHUB_TAG }}"
           body: |
             ## Describe your changes
 
