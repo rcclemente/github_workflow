@@ -19,7 +19,7 @@ jobs:
           base: "uat"
           team-reviewers: |
             @mysale/cloud-engineering-team
-          label: |
+          labels: |
             UAT
           title: "[UAT] Release ${{ env.GITHUB_TAG }}"
           body: |
