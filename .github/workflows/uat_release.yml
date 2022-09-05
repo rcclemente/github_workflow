@@ -26,7 +26,6 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
-          # branch: "uat"
           base: "uat"
           team-reviewers: |
             @mysale/cloud-engineering-team
