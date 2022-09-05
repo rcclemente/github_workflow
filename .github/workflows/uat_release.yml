@@ -14,7 +14,7 @@ jobs:
         run: echo "GITHUB_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Append commit
         run: |
-          git commit -am --allow-empty "[UAT] Release ${{ env.GITHUB_TAG }}"
+          git commit --allow-empty -m "[UAT] Release ${{ env.GITHUB_TAG }}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
