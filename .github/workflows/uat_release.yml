@@ -19,25 +19,22 @@ jobs:
         with:
           # ref: ${{ github.sha }}
           ref: uat
-
-
       - name: Set Tag
         run: |
           echo "PR_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Set Title
         run: |
           echo "PR_TITLE='[UAT] Release ${{ env.PR_TAG }}'" >> $GITHUB_ENV
-
       - name: Reset promotion branch
         run: |
-          git fetch all
+          git fetch --all
           git reset --hard ${{ env.PR_TAG }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
           branch: "${{env.PR_TAG}}-uat-release"
-          # base: "uat"
+          base: uat
           team-reviewers: |
             @mysale/cloud-engineering-team
           labels: |
