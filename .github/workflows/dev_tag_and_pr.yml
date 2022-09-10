@@ -1,0 +1,61 @@
+name: Dev Tag and PR
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - closed
+
+  workflow_dispatch:
+
+jobs:
+  tag_new_merged_pr:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.pull_request.merged == true || startsWith(github.ref, 'refs/tags/dev')
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
+          persist-credentials: false # use personal tocket instead of GITHUB_TOKEN.
+          fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
+      - name: Create Major Version
+        run: |
+          CURRENT_RELEASE_VERSION=$(git describe --tags --abbrev=0 | awk 'BEGIN { FS = "v" } {print $2}')
+          versions=(${CURRENT_RELEASE_VERSION//./ })
+          major=${versions[0]:-0}
+          major_i=$((major+1))
+          RELEASE_VERSION="v${major_i}"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: thomaseizinger/create-release@1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: ${{ env.RELEASE_VERSION }}
+          draft: false
+          prerelease: false
+      
+      - name: Set PR Title
+        run: |
+          echo "PR_TITLE='[UAT] Release ${{ env.RELEASE_VERSION }}'" >> $GITHUB_ENV
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          delete-branch: true
+          base: "uat"
+          team-reviewers: |
+            @mysale/cloud-engineering-team
+          labels: |
+            UAT
+          title: "${{ env.PR_TITLE }}"
+          body: |
+            ## Describe your changes
+
+            ## Checklist before requesting a review
+            - [ ] Verified that this worked with DEV environment
+
