@@ -15,6 +15,9 @@ jobs:
         - [ ] Verified that this worked with DEV environment
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: $GITHUB_SHA
+
       - name: Set Tag
         run: |
           echo "PR_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
