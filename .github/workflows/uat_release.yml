@@ -36,7 +36,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
-          branch: "${{PR_TAG}}-uat-release"
+          branch: "${{env.PR_TAG}}-uat-release"
           # base: "uat"
           team-reviewers: |
             @mysale/cloud-engineering-team
