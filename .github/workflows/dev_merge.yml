@@ -6,6 +6,9 @@ on:
       - dev
     types:
       - closed
+  
+  workflow_dispatch:
+
 
 jobs:
   tag_new_merged_pr:
