@@ -1,0 +1,40 @@
+name: UAT Release
+on:
+  workflow_dispatch:
+
+jobs:
+  uat_release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    name: Create Pull Request to UAT
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: uat
+      - name: Set Tag
+        run: |
+          echo "PR_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
+      - name: Set Title
+        run: |
+          echo "PR_TITLE=\"[UAT] Release ${{ env.PR_TAG }}\"" >> $GITHUB_ENV
+      - name: Reset promotion branch
+        run: |
+          git fetch --all
+          git reset --hard ${{ env.PR_TAG }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          delete-branch: true
+          branch: "${{env.PR_TAG}}-uat-release"
+          base: uat
+          team-reviewers: |
+            @mysale/cloud-engineering-team
+          labels: |
+            UAT
+          title: ${{ env.PR_TITLE }}
+          body: |
+            ## Describe your changes
+            created by: ${{github.actor}}
+
+            ## Checklist before requesting a review
+            - [ ] Verified that this worked with DEV environment
