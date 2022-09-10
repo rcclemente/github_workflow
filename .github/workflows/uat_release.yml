@@ -16,7 +16,7 @@ jobs:
           echo "PR_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Set Title
         run: |
-          echo "PR_TITLE='[UAT] Release ${{ env.PR_TAG }}'" >> $GITHUB_ENV
+          echo "PR_TITLE=\"[UAT] Release ${{ env.PR_TAG }}\"" >> $GITHUB_ENV
       - name: Reset promotion branch
         run: |
           git fetch --all
@@ -34,6 +34,7 @@ jobs:
           title: ${{ env.PR_TITLE }}
           body: |
             ## Describe your changes
+            created by: ${{github.actor}}
 
             ## Checklist before requesting a review
             - [ ] Verified that this worked with DEV environment
