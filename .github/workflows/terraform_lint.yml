@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: test
         run: |
-          echo "env=${{ github.ref }}"
+          echo "env=${{ github.event.pull_request.base.ref }}"
 
   set-environment:
     if: |
