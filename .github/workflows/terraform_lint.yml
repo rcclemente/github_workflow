@@ -7,6 +7,14 @@ on:
       - 'terraform/**.tf'
       - 'terraform/vars/**.tfvars'
 jobs:
+  show-environment:
+    runs-on: ubuntu-latest
+    name: Show Environment
+    steps:
+      - name: test
+        run: |
+          echo "env=${{ github.ref }}"
+
   set-environment:
     if: |
       github.ref == 'ref/heads/dev'
