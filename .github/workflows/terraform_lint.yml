@@ -17,9 +17,9 @@ jobs:
 
   set-environment:
     if: |
-      github.event.pull_request.base.ref = 'ref/heads/dev'
-      || github.event.pull_request.base.ref = 'ref/heads/uat'
-      || github.event.pull_request.base.ref = 'ref/heads/prod'
+      github.event.pull_request.base.ref == 'ref/heads/dev'
+      || github.event.pull_request.base.ref == 'ref/heads/uat'
+      || github.event.pull_request.base.ref == 'ref/heads/prod'
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
