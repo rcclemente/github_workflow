@@ -9,7 +9,9 @@ on:
 jobs:
   set-environment:
     if: |
-        github.ref == "ref/heads/dev"
+        github.ref == "ref/heads/dev" ||
+        github.ref == "ref/heads/uat" ||
+        github.ref == "ref/heads/prod"
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
