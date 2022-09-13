@@ -17,9 +17,9 @@ jobs:
 
   set-environment:
     if: |
-      github.event.pull_request.base.ref == 'ref/heads/dev'
-      || github.event.pull_request.base.ref == 'ref/heads/uat'
-      || github.event.pull_request.base.ref == 'ref/heads/prod'
+      github.event.pull_request.base.ref == 'dev'
+      || github.event.pull_request.base.ref == 'uat'
+      || github.event.pull_request.base.ref == 'prod'
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
@@ -28,21 +28,7 @@ jobs:
           echo "running"
       - name: Set Environment
         run: |
-          case "${{ github.event.pull_request.base.ref }}" in
-           'ref/heads/dev' )
-             echo "::set-output name=workflow_environment::dev"
-             ;;
-           'ref/heads/uat' )
-             echo "::set-output name=workflow_environment::uat"
-             ;;
-           'ref/heads/prod' )
-             echo "::set-output name=workflow_environment::prod"
-             ;;
-           *)
-            echo "no match"
-            exit 1
-            ;;
-          esac
+          echo "::set-output name=workflow_environment::${{ github.event.pull_request.base.ref }}"
 
   validate:
     needs: set-environment
