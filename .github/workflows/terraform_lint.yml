@@ -16,10 +16,7 @@ jobs:
           echo "env=${{ github.event.pull_request.base.ref }}"
 
   set-environment:
-    if: |
-      github.ref == 'ref/heads/dev'
-      || github.ref == 'ref/heads/uat'
-      || github.ref == 'ref/heads/prod'
+    if: contains(fromJson('["ref/heads/dev", "ref/heads/uat","ref/heads/prod"]'), github.event.pull_request.base.ref)
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
@@ -28,7 +25,7 @@ jobs:
           echo "running"
       - name: Set Environment
         run: |
-          case "${{ github.ref }}" in
+          case "${{ github.event.pull_request.base.ref }}" in
            'ref/heads/dev' )
              echo "::set-output name=workflow_environment::dev"
              ;;
