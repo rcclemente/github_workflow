@@ -8,13 +8,10 @@ on:
       - 'terraform/vars/**.tfvars'
 jobs:
   set-environment:
-    if: |
-        github.event.issue.pull_request &&
-        (
-          github.head_ref == 'dev' ||
-          github.head_ref == 'uat' ||
-          github.head_ref == 'prod'
-        )
+    if: contains(
+            fromJson('["ref/heads/dev", "ref/heads/uat","ref/heads/prod"]'),
+            github.ref
+          )
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
