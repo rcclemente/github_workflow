@@ -9,10 +9,13 @@ on:
 jobs:
   set-environment:
     if: |
-        github.ref == "ref/heads/dev"    
+        github.ref == "ref/heads/dev"
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
+      - name: test
+        run: |
+          echo "running"
       - name: Set Environment
         run: |
           case "${{ github.ref }}" in
