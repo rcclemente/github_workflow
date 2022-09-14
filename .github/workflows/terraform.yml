@@ -18,10 +18,10 @@ jobs:
     steps:
       - name: test
         run: |
-          echo "env=${{ github.ref }}"
+          # echo "env=${{ github.ref }}"
           echo "contains_uat=${{ contains(github.event.issue.labels.*.name, 'uat') }}
           echo "context=${{ toJSON(github) }}"
-          echo "issue.pull_request=${{ github.event.issue.pull_request }}"
+          
   set-environment:
     if: |
       github.event.issue.pull_request &&
