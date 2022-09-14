@@ -37,7 +37,7 @@ jobs:
       - name: Get Reference 
         run: |
           echo "REF=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
-          echo "current_reference=${{ env.REF }}"
       - name: Set Environment
         run: |
+          echo "current_reference=${{ env.REF }}"
           echo "::set-output name=workflow_environment::${{ env.REF }}"
