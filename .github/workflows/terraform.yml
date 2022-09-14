@@ -19,7 +19,7 @@ jobs:
       - name: test
         run: |
           echo "env=${{ github.ref }}"
-          echo "context=$GITHUB_CONTEXT"
+          echo "context=${{ github }}"
           echo "issue.pull_request=${{ github.event.issue.pull_request }}"
   set-environment:
     if: |
