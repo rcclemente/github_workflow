@@ -1,11 +1,16 @@
----
-name: Terraform Lint
+name: Terraform
 on:
-  pull_request:
-    types: [opened, synchronize, reopened, labeled]
-    paths:
-      - 'terraform/**.tf'
-      - 'terraform/vars/**.tfvars'
+  issue_comment:
+    types: [ created ]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
 jobs:
   show-environment:
     runs-on: ubuntu-latest
@@ -17,9 +22,12 @@ jobs:
           echo "issue.pull_request=${{ github.event.issue.pull_request }}"
   set-environment:
     if: |
-      github.event.pull_request.base.ref == 'dev'
-      || github.event.pull_request.base.ref == 'uat'
-      || github.event.pull_request.base.ref == 'prod'
+      github.event.issue.pull_request &&
+      (
+        github.event.pull_request.base.ref == 'dev' ||
+        github.event.pull_request.base.ref == 'uat' ||
+        github.event.pull_request.base.ref == 'prod'
+      )
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
@@ -29,11 +37,3 @@ jobs:
       - name: Set Environment
         run: |
           echo "::set-output name=workflow_environment::${{ github.event.pull_request.base.ref }}"
-
-  validate:
-    needs: set-environment
-    runs-on: ubuntu-latest
-    name: Validate terraform configuration
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
