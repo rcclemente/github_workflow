@@ -18,8 +18,8 @@ jobs:
     steps:
       - name: test
         run: |
-          echo "env=${github.ref}"
-          echo "issue.pull_request=${github.event.issue.pull_request}"
+          echo "env=${{ github.ref }}"
+          echo "issue.pull_request=${{ github.event.issue.pull_request }}"
   set-environment:
     if: |
       github.event.issue.pull_request &&
