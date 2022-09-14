@@ -21,6 +21,7 @@ jobs:
           echo "env=${{ github.ref }}"
           echo "context=${{ toJSON(github) }}"
           echo "issue.pull_request=${{ github.event.issue.pull_request }}"
+          echo "contains_uat=${{ contains( github.event.issue.labels.*.name, 'uat') }}
   set-environment:
     if: |
       github.event.issue.pull_request &&
