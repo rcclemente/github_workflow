@@ -20,6 +20,7 @@ jobs:
         run: |
           # echo "env=${{ github.ref }}"
           echo "contains_uat=${{ contains(github.event.issue.labels.*.name, 'uat') }}"
+          echo "contains_prod=${{ contains(github.event.issue.labels.*.name, 'prod') }}"
           echo "context=${{ toJSON(github) }}"
           
   set-environment:
