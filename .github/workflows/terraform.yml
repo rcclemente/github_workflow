@@ -19,6 +19,7 @@ jobs:
       - name: test
         run: |
           echo "env=${{ github.ref }}"
+          echo "$GITHUB_CONTEXT"
           echo "issue.pull_request=${{ github.event.issue.pull_request }}"
   set-environment:
     if: |
@@ -34,10 +35,19 @@ jobs:
       - name: test
         run: |
           echo "running"
-      - name: Get Reference 
+      - name: Get Reference
         run: |
           echo "REF=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Set Environment
+        id: workflow_environment
         run: |
           echo "current_reference=${{ env.REF }}"
           echo "::set-output name=workflow_environment::${{ env.REF }}"
+    outputs:
+      workflow_environment: ${{ steps.workflow_environment.outputs.workflow_environment }}
+  job2:
+    runs-on: ubuntu-latest
+    needs: set-environment
+    steps:
+      - run: |
+          echo "workflow_environment=${{ needs.set-environment.outputs.workflow_environment }}"
