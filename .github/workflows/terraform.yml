@@ -18,15 +18,15 @@ jobs:
     steps:
       - name: test
         run: |
-          echo "env=${{ github.event.issue.pull_request.base.ref }}"
+          echo "env=${{ github.ref }}"
           echo "issue.pull_request=${{ github.event.issue.pull_request }}"
   set-environment:
     if: |
       github.event.issue.pull_request &&
       (
-        github.event.issue.pull_request.base.ref  == 'dev' ||
-        github.event.issue.pull_request.base.ref  == 'uat' ||
-        github.event.issue.pull_request.base.ref  == 'prod'
+        github.ref  == 'refs/heads/dev' ||
+        github.ref  == 'refs/heads/uat' ||
+        github.ref  == 'refs/heads/prod' ||
       )
     runs-on: ubuntu-latest
     name: Set Environment
@@ -34,6 +34,9 @@ jobs:
       - name: test
         run: |
           echo "running"
+      - name: Get Reference 
+        run: |
+          echo "REF=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Set Environment
         run: |
-          echo "::set-output name=workflow_environment::${{ github.event.issue.pull_request.base.ref }}"
+          echo "::set-output name=workflow_environment::${{ env.REF }}"
