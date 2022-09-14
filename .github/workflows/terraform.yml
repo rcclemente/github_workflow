@@ -1,0 +1,39 @@
+name: Terraform
+on:
+  issue_comment:
+    types: [ created ]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  show-environment:
+    runs-on: ubuntu-latest
+    name: Show Environment
+    steps:
+      - name: test
+        run: |
+          echo "env=${{ GITHUB_BASE_REF }}"
+          echo "issue.pull_request=${{ github.event.issue.pull_request }}"
+  set-environment:
+    if: |
+      github.event.issue.pull_request &&
+      (
+        GITHUB_BASE_REF == 'dev' ||
+        GITHUB_BASE_REF == 'uat' ||
+        GITHUB_BASE_REF == 'prod'
+      )
+    runs-on: ubuntu-latest
+    name: Set Environment
+    steps:
+      - name: test
+        run: |
+          echo "running"
+      - name: Set Environment
+        run: |
+          echo "::set-output name=workflow_environment::${{ github.event.pull_request.base.ref }}"
