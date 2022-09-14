@@ -19,7 +19,7 @@ jobs:
       - name: test
         run: |
           # echo "env=${{ github.ref }}"
-          echo "contains_uat=${{ contains(github.event.issue.labels.*.name, 'uat') }}
+          # echo "contains_uat=${{ contains(github.event.issue.labels.*.name, 'uat') }}
           echo "context=${{ toJSON(github) }}"
           
   set-environment:
