@@ -1,0 +1,49 @@
+name: Terraform
+on:
+  issue_comment:
+    types: [ created ]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  show-environment:
+    runs-on: ubuntu-latest
+    name: Show Environment
+    steps:
+      - name: test
+        run: |
+          # echo "env=${{ github.ref }}"
+          echo "contains_uat=${{ contains(github.event.issue.labels.*.name, 'uat') }}"
+          echo "contains_prod=${{ contains(github.event.issue.labels.*.name, 'prod') }}"
+          echo "context=${{ toJSON(github) }}"
+  set-environment:
+    if: |
+      github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    name: Set Environment
+    steps:
+      - name: Set Environment
+        id: workflow_environment
+        run: |
+          if ${{ contains(github.event.issue.labels.*.name, 'UAT') }}; then
+            echo "::set-output name=workflow_environment::uat"
+          elif ${{ contains(github.event.issue.labels.*.name, 'PROD') }}; then
+            echo "::set-output name=workflow_environment::prod"
+          else
+            echo "::set-output name=workflow_environment::dev"
+          fi
+    outputs:
+      workflow_environment: ${{ steps.workflow_environment.outputs.workflow_environment }}
+    
+  job2:
+    runs-on: ubuntu-latest
+    needs: set-environment
+    steps:
+      - run: |
+          echo "workflow_environment=${{ needs.set-environment.outputs.workflow_environment }}"
