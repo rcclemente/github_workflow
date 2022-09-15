@@ -22,31 +22,25 @@ jobs:
           echo "contains_uat=${{ contains(github.event.issue.labels.*.name, 'uat') }}"
           echo "contains_prod=${{ contains(github.event.issue.labels.*.name, 'prod') }}"
           echo "context=${{ toJSON(github) }}"
-          
   set-environment:
     if: |
-      github.event.issue.pull_request &&
-      (
-        github.ref  == 'refs/heads/dev' ||
-        github.ref  == 'refs/heads/uat' ||
-        github.ref  == 'refs/heads/prod'
-      )
+      github.event.issue.pull_request
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
-      - name: test
-        run: |
-          echo "running"
-      - name: Get Reference
-        run: |
-          echo "REF=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Set Environment
         id: workflow_environment
         run: |
-          echo "current_reference=${{ env.REF }}"
-          echo "::set-output name=workflow_environment::${{ env.REF }}"
+          if ${{ contains(github.event.issue.labels.*.name, 'UAT') }}; then
+            echo "::set-output name=workflow_environment::uat"
+          elif ${{ contains(github.event.issue.labels.*.name, 'PROD') }}; then
+            echo "::set-output name=workflow_environment::prod"
+          else
+            echo "::set-output name=workflow_environment::dev"
+          fi
     outputs:
       workflow_environment: ${{ steps.workflow_environment.outputs.workflow_environment }}
+    
   job2:
     runs-on: ubuntu-latest
     needs: set-environment
