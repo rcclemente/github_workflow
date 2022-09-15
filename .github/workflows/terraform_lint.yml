@@ -26,17 +26,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Set Environment
     steps:
-      - name: test
-        run: |
-          echo "running"
       - name: Set Environment
+        id: workflow_environment
         run: |
           echo "::set-output name=workflow_environment::${{ github.event.pull_request.base.ref }}"
+    outputs:
+      workflow_environment: ${{ steps.workflow_environment.outputs.workflow_environment }}
 
-  validate:
-    needs: set-environment
+  job2:
     runs-on: ubuntu-latest
-    name: Validate terraform configuration
+    needs: set-environment
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - run: |
+          echo "workflow_environment=${{ needs.set-environment.outputs.workflow_environment }}"
+
