@@ -35,11 +35,11 @@ jobs:
           git checkout ${ENV}
 
           # create a new branch to apply changes
-          git checkout -b ${{env.PR_TAG}}-${ENV}-release
+          # git checkout -b ${{env.PR_TAG}}-${ENV}-release
 
           # Apply changes to release branch
           cat diff.patch | git apply
-          git commit -am "[${ENV^^}] Release ${{env.PR_TAG}}"
+          # git commit -am "[${ENV^^}] Release ${{env.PR_TAG}}"
           rm diff.patch
 
       - name: Create Pull Request
