@@ -25,7 +25,7 @@ jobs:
           git config user.email github-actions@github.com
 
           # checkout tag
-          git fetch --all
+          git fetch orign ${{env.PR_TAG}}
           git checkout ${{env.PR_TAG}}
 
           # create a diff patch by comparing the current Release to the target branch
