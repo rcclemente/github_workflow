@@ -28,8 +28,7 @@ jobs:
           # revert back to release branch
           git checkout ${ENV}
 
-          # remove if branch is still existing
-          git checkout -D ${{env.PR_TAG}}-${ENV}-release
+          # create a new branch to apply changes
           git checkout -b ${{env.PR_TAG}}-${ENV}-release
 
           # Apply changes to release branch
