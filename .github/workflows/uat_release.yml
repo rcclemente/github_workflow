@@ -21,8 +21,8 @@ jobs:
         run: |
           ENV=uat
 
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          # git config user.name github-actions
+          # git config user.email github-actions@github.com
 
           # checkout tag
           git fetch origin tag ${{env.PR_TAG}}
