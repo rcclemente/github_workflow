@@ -16,8 +16,27 @@ jobs:
           echo "PR_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
       - name: Reset promotion branch
         run: |
+          ENV=uat
+
+          # checkout tag
           git fetch --all
-          git reset --hard ${{ env.PR_TAG }}
+          git checkout ${PR_TAG}
+
+          # create a diff patch by comparing the current Release to the target branch
+          git diff origin/${ENV} > diff.patch
+
+          # revert back to release branch
+          git checkout ${ENV}
+
+          # remove if branch is still existing
+          git checkout -D ${PR_TAG}-${ENV}-release
+          git checkout -b ${PR_TAG}-${ENV}-release
+
+          # Apply changes to release branch
+          cat diff.patch | git apply
+          git commit -am "[${ENV^^}] Release ${PR_TAG}"
+          rm diff.patch
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
