@@ -20,7 +20,7 @@ jobs:
 
           # checkout tag
           git fetch --all
-          git checkout ${PR_TAG}
+          git checkout ${{env.PR_TAG}}
 
           # create a diff patch by comparing the current Release to the target branch
           git diff origin/${ENV} > diff.patch
@@ -29,12 +29,12 @@ jobs:
           git checkout ${ENV}
 
           # remove if branch is still existing
-          git checkout -D ${PR_TAG}-${ENV}-release
-          git checkout -b ${PR_TAG}-${ENV}-release
+          git checkout -D ${{env.PR_TAG}}-${ENV}-release
+          git checkout -b ${{env.PR_TAG}}-${ENV}-release
 
           # Apply changes to release branch
           cat diff.patch | git apply
-          git commit -am "[${ENV^^}] Release ${PR_TAG}"
+          git commit -am "[${ENV^^}] Release ${{env.PR_TAG}}"
           rm diff.patch
 
       - name: Create Pull Request
