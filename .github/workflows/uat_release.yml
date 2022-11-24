@@ -51,6 +51,7 @@ jobs:
             @mysale/cloud-engineering-team
           labels: |
             UAT
+          commit-message: "${{ env.PR_TAG }} Patch update"
           title: "[UAT] Release ${{ env.PR_TAG }}"
           body: |
             ## Description
