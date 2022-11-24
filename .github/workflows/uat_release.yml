@@ -2,7 +2,8 @@ name: UAT Release
 on:
   workflow_dispatch:
 
-# env:
+env:
+  ENV: uat
 #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
@@ -17,9 +18,8 @@ jobs:
       - name: Set Tag
         run: |
           echo "PR_TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)" >> $GITHUB_ENV
-      - name: Reset promotion branch
+      - name: Reset promotion branch ${{ env.ENV }}
         run: |
-          ENV=uat
 
           # git config user.name github-actions
           # git config user.email github-actions@github.com
@@ -29,24 +29,23 @@ jobs:
           git checkout ${{env.PR_TAG}}
 
           # create a diff patch by comparing the current Release to the target branch
-          git diff origin/${ENV} > diff.patch
+          git diff ${{env.ENV}} > diff.patch
 
           # revert back to release branch
-          git checkout ${ENV}
+          git checkout ${{env.ENV}}
 
           # create a new branch to apply changes
-          # git checkout -b ${{env.PR_TAG}}-${ENV}-release
+          # git checkout -b ${{env.PR_TAG}}-${env.ENV}-release
 
           # Apply changes to release branch
           cat diff.patch | git apply
-          # git commit -am "[${ENV^^}] Release ${{env.PR_TAG}}"
           rm diff.patch
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           delete-branch: true
-          branch: "${{env.PR_TAG}}-uat-release"
+          branch: "${{env.PR_TAG}}-${{env.ENV}}-release"
           base: uat
           team-reviewers: |
             @mysale/cloud-engineering-team
